@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendario Mensual</title>
+  <style>
+    /* Estilos opcionales para el calendario */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid black;
+      text-align: center;
+      padding: 8px;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .hoy {
+      background-color: #c0c0c0; /* Color de fondo para el día actual */
+    }
+  </style>
+</head>
+<body>
+  <h2 id="mesYAnio"></h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Lunes</th>
+        <th>Martes</th>
+        <th>Miércoles</th>
+        <th>Jueves</th>
+        <th>Viernes</th>
+        <th>Sábado</th>
+        <th>Domingo</th>
+      </tr>
+    </thead>
+    <tbody id="calendarioBody"></tbody>
+  </table>
+
+  <script>
+    // Función para generar el calendario del mes actual
+    function generarCalendario() {
+      let hoy = new Date();
+      let mes = hoy.getMonth();
+      let año = hoy.getFullYear();
+
+      let primerDia = new Date(año, mes, 1);
+      let ultimoDia = new Date(año, mes + 1, 0);
+      let numDiasMes = ultimoDia.getDate();
+      let primerDiaSemana = primerDia.getDay();
+
+      // Ajuste para empezar el calendario en lunes
+      if (primerDiaSemana === 0) {
+        primerDiaSemana = 7; // Domingo se convierte en 7 para ajustar el inicio en lunes
+      }
+
+      let dias = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+      let contador = 0;
+
+      let calendarioBody = document.getElementById('calendarioBody');
+      calendarioBody.innerHTML = '';
+
+      // Crear filas para las semanas del mes
+      for (let i = 0; i < 6; i++) {
+        let fila = document.createElement('tr');
+
+        // Crear celdas para cada día de la semana
+        for (let j = 0; j < 7; j++) {
+          let celda = document.createElement('td');
+
+          if (i === 0 && j < primerDiaSemana - 1) {
+            // Celdas vacías antes del primer día del mes
+            celda.textContent = '';
+          } else if (contador < numDiasMes) {
+            contador++;
+            celda.textContent = contador;
+
+            // Marcar el día actual con otro color
+            if (contador === hoy.getDate() && mes === hoy.getMonth() && año === hoy.getFullYear()) {
+              celda.classList.add('hoy');
+            }
+          }
+          fila.appendChild(celda);
+        }
+        calendarioBody.appendChild(fila);
+        if (contador >= numDiasMes) break;
+      }
+
+      // Mostrar el mes y año actual
+      document.getElementById('mesYAnio').textContent = `${meses[mes]} ${año}`;
+    }
+
+    // Array de meses para mostrar el nombre completo
+    let meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+    // Llamar a la función para generar el calendario
+    generarCalendario();
+  </script>
+</body>
+</html>
